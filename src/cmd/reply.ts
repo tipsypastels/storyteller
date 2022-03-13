@@ -56,11 +56,19 @@ export class Reply {
     return this;
   }
 
-  into_response(type: RawReplyType): Response {
-    return json({ type, data: this.into_raw() });
+  respond() {
+    return this.respond_with_type(this.reply_type());
   }
 
-  into_raw() {
+  respond_with_type(type: RawReplyType): Response {
+    return json({ type, data: this.raw() });
+  }
+
+  private reply_type(): RawReplyType {
+    return RawReplyType.ChannelMessageWithSource;
+  }
+
+  private raw() {
     const raw: RawReply = {};
 
     if (this._ephemeral) {

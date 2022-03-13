@@ -28,7 +28,7 @@ async function exec_chat_command(intr: CmdIntr, conn: Conn, cmd: AnyCmd) {
   }
 
   await cmd(args);
-  return args.reply.into_response(4); // TODO: not this
+  return args.reply.respond();
 }
 
 function on_error(err: unknown): Response {
@@ -42,5 +42,5 @@ function on_error(err: unknown): Response {
     embed.color("error").title("Welp! The command crashed.");
   }
 
-  return reply.into_response(4);
+  return reply.respond();
 }
