@@ -9,10 +9,7 @@ await pool.connect();
 
 console.log("Listening on http://localhost:8000");
 serve((_req) => {
-  const count = +(localStorage.getItem("count") ?? 0);
-  localStorage.setItem("count", `${count + 1}`);
-
-  return new Response(`Hello World! ${count}`, {
+  return new Response(`Hello World!`, {
     headers: { "content-type": "text/plain" },
   });
 });
