@@ -2,7 +2,7 @@ import {
   json,
   serve,
   validateRequest,
-} from "https://deno.land/x/sift@0.4.0/mod.ts";
+} from "https://deno.land/x/sift@0.4.3/mod.ts";
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
 serve({
