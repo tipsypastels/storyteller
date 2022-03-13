@@ -75,6 +75,7 @@ export class Reply {
 
   private raw(type: RawReplyType) {
     if (this.modal && type === RawReplyType.Modal) {
+      console.log(this.modal.raw);
       return this.modal.raw;
     }
 
@@ -91,6 +92,7 @@ export class Reply {
     if (this.embed.touched) {
       raw.embeds = [this.embed.raw];
     }
+    console.log(raw);
 
     return raw;
   }
