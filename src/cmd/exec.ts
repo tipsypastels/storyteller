@@ -30,6 +30,7 @@ async function exec_chat_command(intr: CmdIntr, conn: Conn, cmd: AnyCmd) {
   console.log(cmd);
   await cmd(args);
   console.log(args.reply);
+  console.log(args.reply.respond());
   return args.reply.respond();
 }
 
