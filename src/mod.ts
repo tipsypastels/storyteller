@@ -1,7 +1,7 @@
 import { json, serve } from "./deps.ts";
 import { verify_intr_request } from "./api/sig.ts";
 import { new_intr_wrapper } from "./api/intr/mod.ts";
-import { PoolClient, POOL } from "./db.ts";
+import { Conn, POOL } from "./db.ts";
 import { resolve_static_command } from "./app/cmd/static/mod.ts.ts";
 import { exec_command } from "./cmd/exec.ts";
 import { type Intr } from "./api/intr/mod.ts";
@@ -40,7 +40,7 @@ async function home(request: Request) {
   }
 }
 
-function handle_intr(intr: Intr, conn: PoolClient) {
+function handle_intr(intr: Intr, conn: Conn) {
   if (!intr.is_command()) {
     return null;
   }

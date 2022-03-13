@@ -1,7 +1,7 @@
 import { Embed } from "./embed.ts";
 import { Reply } from "./reply.ts";
 import { type CmdIntr } from "../api/intr/cmd.ts";
-import { type PoolClient } from "../db.ts";
+import { type Conn } from "../db.ts";
 
 /**
  * An unspecialized concrete command.
@@ -32,7 +32,7 @@ export enum CmdType {
  */
 export interface CmdArgs {
   intr: CmdIntr;
-  conn: PoolClient;
+  conn: Conn;
   embed: Embed;
   reply: Reply;
 }
@@ -50,5 +50,5 @@ export interface CmdData {
  * A resolver for the custom arguments of a command type.
  */
 export interface CmdArgResolver<A extends CmdArgs, I extends CmdIntr> {
-  (intr: I, conn: PoolClient): A | null;
+  (intr: I, conn: Conn): A | null;
 }

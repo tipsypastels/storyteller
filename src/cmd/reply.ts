@@ -34,7 +34,7 @@ export enum RawReplyFlags {
  */
 export class Reply {
   private _content?: string;
-  private _ephemeral = { on_ok: false, on_err: false };
+  private _ephemeral = false;
 
   constructor(private embed: Embed) {}
 
@@ -47,12 +47,7 @@ export class Reply {
   }
 
   ephemeral() {
-    this._ephemeral.on_ok = true;
-    return this;
-  }
-
-  ephemeral_on_error() {
-    this._ephemeral.on_err = true;
+    this._ephemeral = true;
     return this;
   }
 
@@ -68,7 +63,7 @@ export class Reply {
   into_raw() {
     const raw: RawReply = {};
 
-    if (this._ephemeral.on_ok) {
+    if (this._ephemeral) {
       raw.flags = RawReplyFlags.Ephemeral;
     }
 

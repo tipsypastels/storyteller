@@ -1,4 +1,4 @@
-import { PoolClient } from "../../db.ts";
+import { Conn } from "../../db.ts";
 
 /**
  * Representation of a campaign.
@@ -14,7 +14,7 @@ export interface Campaign {
 /**
  * Returns the campaign for the given guild ID, if any.
  */
-export async function fetch_campaign(conn: PoolClient, guild_id: string) {
+export async function fetch_campaign(conn: Conn, guild_id: string) {
   const query = await conn.queryObject`
     SELECT *
     FROM "public"."campaign"

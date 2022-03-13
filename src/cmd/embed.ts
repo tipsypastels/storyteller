@@ -1,3 +1,5 @@
+import { Ary } from "../util/array.ts";
+
 /**
  * Representation of an embed in the Discord API.
  */
@@ -5,6 +7,14 @@ export interface RawEmbed {
   title?: string;
   description?: string;
   color?: number;
+}
+
+/**
+ * Function that can be merged into an embed, applying
+ * changes to it in the process.
+ */
+export interface IntoEmbed<P extends Ary = []> {
+  (embed: Embed, ...args: P): void;
 }
 
 /**
@@ -20,6 +30,11 @@ export class Embed {
 
   get touched() {
     return this._touched;
+  }
+
+  merge<P extends Ary>(into: IntoEmbed<P>, ...p: P) {
+    into(this, ...p);
+    return this;
   }
 
   title(title: string) {
