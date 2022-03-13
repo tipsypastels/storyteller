@@ -1,9 +1,10 @@
-import { json, serve } from "https://deno.land/x/sift@0.4.3/mod.ts";
+import { json, serve } from "./deps.ts";
 import { verify_intr_request } from "./api/sig.ts";
 import { new_intr_wrapper } from "./api/intr/mod.ts";
-import { type CmdArgs } from "./cmd/mod.ts";
-import { exec_static_command } from "./cmd/static.ts";
-import { POOL } from "./db.ts";
+import { PoolClient, POOL } from "./db.ts";
+import { resolve_static_command } from "./app/cmd/static/mod.ts.ts";
+import { exec_command } from "./cmd/exec.ts";
+import { type Intr } from "./api/intr/mod.ts";
 
 serve({
   "/": home,
@@ -24,23 +25,30 @@ async function home(request: Request) {
   }
 
   const conn = await POOL.connect();
-  const intr = new_intr_wrapper(body);
 
   try {
-    if (intr.is_command()) {
-      const args: CmdArgs = {
-        conn,
-        intr,
-      };
+    const intr = new_intr_wrapper(body);
+    const response = await handle_intr(intr, conn);
 
-      const static_response = await exec_static_command(args);
-      if (static_response) {
-        return static_response;
-      }
+    if (response) {
+      return response;
     }
 
     return json({ error: "Bad request" }, { status: 400 });
   } finally {
     conn.release();
   }
+}
+
+function handle_intr(intr: Intr, conn: PoolClient) {
+  if (!intr.is_command()) {
+    return null;
+  }
+
+  const cmd = resolve_static_command(intr);
+  if (!cmd) {
+    return null;
+  }
+
+  return exec_command(intr, conn, cmd);
 }

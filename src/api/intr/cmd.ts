@@ -6,6 +6,7 @@ export interface RawCmdIntr {
   data: {
     id: string;
     name: string;
+    type: number;
   };
   guild_id: string;
 }
@@ -22,6 +23,10 @@ export class CmdIntr {
 
   is_command(): this is CmdIntr {
     return this.type === 2;
+  }
+
+  is_chat_command() {
+    return this.raw.data.type === 1;
   }
 
   get command_name(): string {
