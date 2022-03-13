@@ -16,14 +16,16 @@ export const status: ChatCmd = async ({ intr, conn, embed, modal }) => {
   //   .title(campaign.name)
   //   .descr(`${++count}`);
 
+  // make this callback based,
+  // change textbox() to take the label,
+  // change modal to `reply.modal(title)`
+
   modal
     .title(`Modal ${++count}`)
     .row()
     .textbox()
     .label("hi")
     .value(campaign.name);
-
-  console.log(modal);
 };
 
 status.data = {

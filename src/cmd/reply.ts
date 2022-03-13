@@ -62,9 +62,7 @@ export class Reply {
   }
 
   respond_with_type(type: RawReplyType): Response {
-    const x = { type, data: this.raw(type) };
-    console.log(JSON.stringify(x));
-    return json(x);
+    return json({ type, data: this.raw(type) });
   }
 
   private reply_type(): RawReplyType {
