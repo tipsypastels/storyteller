@@ -7,6 +7,7 @@ export interface RawCmdIntr {
     id: string;
     name: string;
   };
+  guild_id: string;
 }
 
 /**
@@ -25,5 +26,9 @@ export class CmdIntr {
 
   get command_name(): string {
     return this.raw.data.name;
+  }
+
+  get guild_id(): string {
+    return this.raw.guild_id;
   }
 }

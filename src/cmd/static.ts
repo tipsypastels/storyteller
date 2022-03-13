@@ -1,5 +1,4 @@
-import { type Cmd } from "./mod.ts";
-import { type CmdIntr } from "../api/intr/cmd.ts";
+import { type Cmd, type CmdArgs } from "./mod.ts";
 import { json } from "https://deno.land/x/sift@0.4.3/mod.ts";
 
 /**
@@ -7,13 +6,23 @@ import { json } from "https://deno.land/x/sift@0.4.3/mod.ts";
  *
  * @returns a command response, or `null` if no command matched.
  */
-export function exec_static_command(intr: CmdIntr): Promise<Response | null> {
-  const cmd = STATIC_COMMANDS[intr.command_name];
-  return cmd?.({ intr });
+export function exec_static_command(args: CmdArgs): Promise<Response | null> {
+  const cmd = STATIC_COMMANDS[args.intr.command_name];
+  return cmd?.(args);
 }
 
-const status: Cmd = async () => {
-  return json({ type: 4, data: { content: "hello, world!" } });
+const status: Cmd = async ({ intr, conn }) => {
+  const data = await conn.queryObject`
+    SELECT *
+    FROM "public"."campaign"
+    WHERE "campaign"."guild_id" = ${intr.guild_id}
+    LIMIT 1
+  `;
+
+  return json({
+    type: 4,
+    data: { content: JSON.stringify(data.rows) },
+  });
 };
 
 const STATIC_COMMANDS: Record<string, Cmd> = {
