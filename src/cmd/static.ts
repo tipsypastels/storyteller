@@ -15,7 +15,7 @@ const status: Cmd = async ({ intr, conn }) => {
   const data = await conn.queryObject`
     SELECT *
     FROM "public"."campaign"
-    WHERE "campaign"."guild_id" = ${intr.guild_id}
+    WHERE "campaign"."discord_guild_id" = ${intr.guild_id}
     LIMIT 1
   `;
 
