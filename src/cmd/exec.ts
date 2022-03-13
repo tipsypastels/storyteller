@@ -39,6 +39,7 @@ function on_error(err: unknown): Response {
     reply.ephemeral();
     embed.merge(err.into_embed);
   } else {
+    console.error(err);
     embed.color("error").title("Welp! The command crashed.");
   }
 
