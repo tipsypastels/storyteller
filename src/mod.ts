@@ -1,42 +1,28 @@
-import {
-  json,
-  serve,
-  validateRequest,
-} from "https://deno.land/x/sift@0.4.3/mod.ts";
-import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
+import { json, serve } from "https://deno.land/x/sift@0.4.3/mod.ts";
+import { verify_intr_request } from "./api/sig.ts";
+import { new_intr_wrapper } from "./api/intr/mod.ts";
 
 serve({
   "/": home,
 });
 
 async function home(request: Request) {
-  const { error } = await validateRequest(request, {
-    POST: {
-      headers: ["X-Signature-Ed25519", "X-Signature-Timestamp"],
-    },
-  });
-  if (error) {
-    return json({ error: error.message }, { status: error.status });
+  const verified = await verify_intr_request(request);
+
+  if (!verified.ok) {
+    return verified.response;
   }
 
-  const { valid, body } = await verifySignature(request);
-  if (!valid) {
-    return json(
-      { error: "Invalid request" },
-      {
-        status: 401,
-      }
-    );
+  const { body_text } = verified;
+  const body = JSON.parse(body_text);
+
+  if (body.type === /* ping */ 1) {
+    return json({ type: 1 });
   }
 
-  const { type = 0, data = { options: [] } } = JSON.parse(body);
-  if (type === 1) {
-    return json({
-      type: 1,
-    });
-  }
+  const intr = new_intr_wrapper(body);
 
-  if (type === 2) {
+  if (intr.is_command()) {
     return json({
       type: 4,
       data: {
@@ -45,25 +31,5 @@ async function home(request: Request) {
     });
   }
 
-  return json({ error: "bad request" }, { status: 400 });
-}
-
-async function verifySignature(
-  request: Request
-): Promise<{ valid: boolean; body: string }> {
-  const PUBLIC_KEY = Deno.env.get("DISCORD_PUBLIC_KEY")!;
-  const signature = request.headers.get("X-Signature-Ed25519")!;
-  const timestamp = request.headers.get("X-Signature-Timestamp")!;
-  const body = await request.text();
-  const valid = nacl.sign.detached.verify(
-    new TextEncoder().encode(timestamp + body),
-    hexToUint8Array(signature),
-    hexToUint8Array(PUBLIC_KEY)
-  );
-
-  return { valid, body };
-}
-
-function hexToUint8Array(hex: string) {
-  return new Uint8Array(hex.match(/.{1,2}/g)!.map((val) => parseInt(val, 16)));
+  return json({ error: "Bad request" }, { status: 400 });
 }
