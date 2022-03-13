@@ -3,6 +3,10 @@
  */
 export interface RawCmdIntr {
   type: 2;
+  data: {
+    id: string;
+    name: string;
+  };
 }
 
 /**
@@ -17,5 +21,9 @@ export class CmdIntr {
 
   is_command(): this is CmdIntr {
     return this.type === 2;
+  }
+
+  get command_name(): string {
+    return this.raw.data.name;
   }
 }
