@@ -32,6 +32,8 @@ async function exec_chat_command(intr: CmdIntr, conn: Conn, cmd: AnyCmd) {
 }
 
 function on_error(err: unknown): Response {
+  console.error(err);
+
   const embed = new Embed();
   const reply = new Reply(embed);
 
@@ -39,7 +41,6 @@ function on_error(err: unknown): Response {
     reply.ephemeral();
     embed.merge(err.into_embed);
   } else {
-    console.error(err);
     embed.color("error").title("Welp! The command crashed.");
   }
 
