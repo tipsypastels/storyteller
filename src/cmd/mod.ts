@@ -2,7 +2,6 @@ import { Embed } from "./embed.ts";
 import { Reply } from "./reply.ts";
 import { type CmdIntr } from "../api/intr/cmd.ts";
 import { type Conn } from "../db.ts";
-import { Modal } from "./components/modal.ts";
 
 /**
  * An unspecialized concrete command.
@@ -36,7 +35,6 @@ export interface CmdArgs {
   conn: Conn;
   embed: Embed;
   reply: Reply;
-  modal: Modal;
 }
 
 /**

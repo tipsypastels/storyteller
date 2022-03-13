@@ -16,8 +16,9 @@ export interface RawModal {
  */
 export class Modal implements Handler {
   private _rows = new Rows();
-  private _title = "Prompt";
   private _custom_id = custom_id();
+
+  constructor(private _title: string) {}
 
   get touched() {
     return this._title || this._rows.touched;
@@ -35,12 +36,8 @@ export class Modal implements Handler {
     //
   }
 
-  title(title: string) {
-    this._title = title;
+  row(cb: (row: Row) => void) {
+    this._rows.row(cb);
     return this;
-  }
-
-  row(): Row {
-    return this._rows.row();
   }
 }

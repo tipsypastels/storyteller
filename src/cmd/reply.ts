@@ -36,8 +36,9 @@ export enum RawReplyFlags {
 export class Reply {
   private _content?: string;
   private _ephemeral = false;
+  private _modal?: Modal;
 
-  constructor(private embed: Embed, private modal?: Modal) {}
+  constructor(private embed: Embed) {}
 
   get touched() {
     return this.embed.touched || this.content;
@@ -57,6 +58,11 @@ export class Reply {
     return this;
   }
 
+  modal(title: string) {
+    this._modal = new Modal(title);
+    return this._modal;
+  }
+
   respond() {
     return this.respond_with_type(this.reply_type());
   }
@@ -66,7 +72,7 @@ export class Reply {
   }
 
   private reply_type(): RawReplyType {
-    if (this.modal?.touched) {
+    if (this._modal?.touched) {
       return RawReplyType.Modal;
     }
 
@@ -74,8 +80,8 @@ export class Reply {
   }
 
   private raw(type: RawReplyType) {
-    if (this.modal && type === RawReplyType.Modal) {
-      return this.modal.raw;
+    if (this._modal && type === RawReplyType.Modal) {
+      return this._modal.raw;
     }
 
     const raw: RawReply = {};

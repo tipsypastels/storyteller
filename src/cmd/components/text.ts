@@ -27,13 +27,12 @@ export class Textbox implements Component {
     custom_id: custom_id(),
   };
 
-  get raw(): RawTextbox {
-    return <RawTextbox>this._raw;
+  constructor(label: string) {
+    this._raw.label = label;
   }
 
-  label(label: string) {
-    this._raw.label = label;
-    return this;
+  get raw(): RawTextbox {
+    return <RawTextbox>this._raw;
   }
 
   multiline() {

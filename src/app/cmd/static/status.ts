@@ -7,7 +7,7 @@ let count = 0;
 /**
  * The `/status` static chat command.
  */
-export const status: ChatCmd = async ({ intr, conn, embed, modal }) => {
+export const status: ChatCmd = async ({ intr, conn, reply }) => {
   const campaign = await fetch_campaign(conn, intr.guild_id);
   if (!campaign) throw error("none");
 
@@ -16,16 +16,11 @@ export const status: ChatCmd = async ({ intr, conn, embed, modal }) => {
   //   .title(campaign.name)
   //   .descr(`${++count}`);
 
-  // make this callback based,
-  // change textbox() to take the label,
-  // change modal to `reply.modal(title)`
-
-  modal
-    .title(`Modal ${++count}`)
-    .row()
-    .textbox()
-    .label("hi")
-    .value(campaign.name);
+  reply.modal(`Modal ${++count}`).row((row) => {
+    row.textbox("Test", (text) => {
+      text.value(campaign.name);
+    });
+  });
 };
 
 status.data = {
