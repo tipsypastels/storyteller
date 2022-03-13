@@ -21,6 +21,8 @@ export const status: ChatCmd = async ({ intr, conn, embed, modal }) => {
     .row()
     .textbox()
     .value(campaign.name);
+
+  console.log(modal);
 };
 
 status.data = {
