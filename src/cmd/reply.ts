@@ -1,5 +1,6 @@
 import { Embed, RawEmbed } from "./embed.ts";
 import { json } from "../deps.ts";
+import { Modal } from "./components/modal.ts";
 
 /**
  * Representation of an interaction reply in the Discord API.
@@ -36,7 +37,7 @@ export class Reply {
   private _content?: string;
   private _ephemeral = false;
 
-  constructor(private embed: Embed) {}
+  constructor(private embed: Embed, private modal?: Modal) {}
 
   get touched() {
     return this.embed.touched || this.content;
@@ -61,14 +62,22 @@ export class Reply {
   }
 
   respond_with_type(type: RawReplyType): Response {
-    return json({ type, data: this.raw() });
+    return json({ type, data: this.raw(type) });
   }
 
   private reply_type(): RawReplyType {
+    if (this.modal?.touched) {
+      return RawReplyType.Modal;
+    }
+
     return RawReplyType.ChannelMessageWithSource;
   }
 
-  private raw() {
+  private raw(type: RawReplyType) {
+    if (this.modal && type === RawReplyType.Modal) {
+      return this.modal.raw;
+    }
+
     const raw: RawReply = {};
 
     if (this._ephemeral) {

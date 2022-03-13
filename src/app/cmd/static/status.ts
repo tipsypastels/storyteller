@@ -7,14 +7,20 @@ let count = 0;
 /**
  * The `/status` static chat command.
  */
-export const status: ChatCmd = async ({ intr, conn, embed }) => {
+export const status: ChatCmd = async ({ intr, conn, embed, modal }) => {
   const campaign = await fetch_campaign(conn, intr.guild_id);
   if (!campaign) throw error("none");
 
-  embed
-    .color("ok")
-    .title(campaign.name)
-    .descr(`${++count}`);
+  // embed
+  //   .color("ok")
+  //   .title(campaign.name)
+  //   .descr(`${++count}`);
+
+  modal
+    .title(`Modal ${++count}`)
+    .row()
+    .textbox()
+    .value(campaign.name);
 };
 
 status.data = {

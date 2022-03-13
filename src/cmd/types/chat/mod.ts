@@ -8,6 +8,7 @@ import {
 import { type CmdIntr } from "../../../api/intr/cmd.ts";
 import { Reply } from "../../reply.ts";
 import { Embed } from "../../embed.ts";
+import { Modal } from "../../components/modal.ts";
 
 /**
  * Alias to `CmdType.Chat` to reduce number of imports.
@@ -43,12 +44,14 @@ export type ChatCmdArgResolver = CmdArgResolver<ChatCmdArgs, CmdIntr>;
  */
 export const resolve_chat_cmd_args: ChatCmdArgResolver = (intr, conn) => {
   const embed = new Embed();
-  const reply = new Reply(embed);
+  const modal = new Modal();
+  const reply = new Reply(embed, modal);
 
   return {
     intr,
     conn,
     embed,
     reply,
+    modal,
   };
 };
